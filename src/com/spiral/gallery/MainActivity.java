@@ -1,5 +1,6 @@
 package com.spiral.gallery;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,17 +17,24 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.origamilabs.library.views.StaggeredGridView;
+import com.origamilabs.library.views.StaggeredGridView.OnItemClickListener;
 import com.spiral.gallery.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnDragListener;
 
-public class MainActivity extends Activity implements Request.Callback {
+public class MainActivity extends Activity implements Request.Callback, OnDragListener, OnItemClickListener {
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
+	private StaggeredGridView mGrid;
+    private ArrayList<String> mData;
 	
 	/**
 	 * Callback called whenever there is a session change
@@ -42,6 +50,7 @@ public class MainActivity extends Activity implements Request.Callback {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Log.d(TAG,"onCreate");
 		uiHelper = new UiLifecycleHelper(this, callback);
 	    uiHelper.onCreate(savedInstanceState);
 	    
@@ -99,8 +108,7 @@ public class MainActivity extends Activity implements Request.Callback {
 	
 	private void requestPhotoPermissions(){
 	    Session session = Session.getActiveSession();
-		Session.NewPermissionsRequest newPermissionsRequest = new Session
-				.NewPermissionsRequest(this, Arrays.asList("user_photos"));	    
+		Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(this, Arrays.asList("user_photos"));	    
 		session.requestNewReadPermissions(newPermissionsRequest);
 	}
 	
@@ -146,11 +154,24 @@ public class MainActivity extends Activity implements Request.Callback {
 	public void onCompleted(Response response) {
 		GraphObject graphObject = response.getGraphObject();
 		JSONArray array = (JSONArray) graphObject.getProperty("data");
-		for(int i = 0; i < array.length(); i++)
-			try {
-				Log.d(TAG,"element at "+i+": "+array.get(i));
-			} catch (JSONException e) {
-				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
-			}
+//		for(int i = 0; i < array.length(); i++)
+//			try {
+////				Log.d(TAG,"element at "+i+": "+array.get(i));
+//			} catch (JSONException e) {
+//				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
+//			}
+		StaggeredAdapter adapter = new StaggeredAdapter(array);
+	}
+
+	@Override
+	public boolean onDrag(View v, DragEvent event) {
+		Log.d(TAG,"onDrag");
+		return false;
+	}
+
+	@Override
+	public void onItemClick(StaggeredGridView parent, View view, int position,
+			long id) {
+		Log.d(TAG,"onItemClick");
 	}
 }
