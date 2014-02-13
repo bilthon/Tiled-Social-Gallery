@@ -168,12 +168,6 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 	public void onCompleted(Response response) {
 		GraphObject graphObject = response.getGraphObject();
 		JSONArray array = (JSONArray) graphObject.getProperty("data");
-		for(int i = 0; i < array.length(); i++)
-			try {
-				Log.d(TAG,"element at "+i+": "+array.get(i));
-			} catch (JSONException e) {
-				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
-			}
 		this.listView.setAdapter(new AlbumAdapter(this, imageLoader, array));
 	}
 }
