@@ -2,7 +2,6 @@ package com.spiral.gallery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,10 +21,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnDragListener;
 
 public class MainActivity extends Activity implements Request.Callback {
 	private static final String TAG = "MainFragment";
@@ -155,6 +151,5 @@ public class MainActivity extends Activity implements Request.Callback {
 //			} catch (JSONException e) {
 //				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
 //			}
-		StaggeredAdapter adapter = new StaggeredAdapter(array);
 	}
 }
