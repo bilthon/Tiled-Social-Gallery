@@ -52,7 +52,7 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 
 		listView = (StaggeredGridView) findViewById(R.id.grid);
 		listView.setColumnCount(3);
-		listView.setOnItemClickListener(this);
+		listView.setOnItemClickListener(this);		
 	}
 	
 	@Override

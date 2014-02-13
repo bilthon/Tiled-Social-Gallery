@@ -66,24 +66,31 @@ public class AlbumAdapter extends BaseAdapter {
 	private HashMap<Integer,Boolean> checkTable;
 	private final int MAX_PHOTOS = 10000;
 	
+	/* Variable that will hold the density value of the screen.
+	 * We will use this value to decide whether to display a small or a big
+	 * image in the gallery. Since displaying a high resolution image on a low 
+	 * density screen is a waste of resources, we prefer to allow only HDPI screens
+	 * and above to display high resolution images in the grid */
+	private float mCurrentDensity = 1;
+	
 	public AlbumAdapter(Context context, ImageLoader l){
 		mContext = context;
 		mImageLoader = l;
-		setupOptions();
+		setupAdapter();
 	}
 	
 	public AlbumAdapter(Context context, ImageLoader l, JSONArray array){
 		mContext = context;
 		mImageLoader = l;
 		mArray = array;
-		setupOptions();
+		setupAdapter();
 	}
 	
 	public void setData(JSONArray array){
 		mArray = array;
 	}
 	
-	private void setupOptions(){
+	private void setupAdapter(){
 	    /* Options specify different properties of the dynamic image loading procedure */
 		options = new DisplayImageOptions.Builder()
 		.showImageOnLoading(R.drawable.ic_stub)
@@ -95,6 +102,7 @@ public class AlbumAdapter extends BaseAdapter {
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 		
+		/* Fill in the lookup table used to check which image to expand */
 		checkTable = new HashMap<Integer, Boolean>();
 		long before = System.currentTimeMillis();
 		for(int i = 0; i < MAX_PHOTOS; i++)
@@ -102,6 +110,10 @@ public class AlbumAdapter extends BaseAdapter {
 				checkTable.put(i, true);
 		long after = System.currentTimeMillis();
 		Log.d(TAG,"Filling the table took me: "+(after-before)+" ms");
+		
+		/* Saving density information in an instance variable for later use */
+		Log.d(TAG,"Density: "+mContext.getResources().getDisplayMetrics().density);
+		mCurrentDensity = mContext.getResources().getDisplayMetrics().density;
 	}
 
 	@Override
@@ -147,10 +159,10 @@ public class AlbumAdapter extends BaseAdapter {
 		if(checkTable.get(Integer.valueOf(position)) != null){
 			Log.d(TAG,"Extening view at position "+position);
             lp.span = 3;
-            lp.height = 480;
+            lp.height = (int) mContext.getResources().getDimension(R.dimen.grid_item_size_big);
 		}else{
 			lp.span = 1;
-			lp.height = 280;
+			lp.height = (int) mContext.getResources().getDimension(R.dimen.grid_item_size_small);
 		}
         imageView.setLayoutParams(lp);
         imageView.setScaleType(ScaleType.CENTER_CROP);
@@ -158,7 +170,11 @@ public class AlbumAdapter extends BaseAdapter {
 		try {
 			JSONObject element;
 			element = (JSONObject) mArray.get(position);
-			String uri = element.getString(URI_BIG);
+			String uri = null;
+			if(mCurrentDensity <= 1)
+				uri = element.getString(URI_THUMBNAIL);
+			else
+				uri = element.getString(URI_BIG);
 			mImageLoader.displayImage(uri, imageView, options);
 		} catch (JSONException e) {
 			Log.e(TAG,"JSONException at calling the get method on an JSONArray. Msg: "+e.getMessage());
