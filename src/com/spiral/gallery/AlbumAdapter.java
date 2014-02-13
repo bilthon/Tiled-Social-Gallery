@@ -74,7 +74,7 @@ public class AlbumAdapter extends BaseAdapter {
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(true)
 		.cacheOnDisc(true)
-		.considerExifParams(true)
+//		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 	}
@@ -114,14 +114,19 @@ public class AlbumAdapter extends BaseAdapter {
 			imageView = (ImageView) inflater.inflate(R.layout.item_grid_image, parent, false);
 		}else{
 			imageView = (ImageView) convertView;
+			imageView.setImageResource(R.drawable.ic_empty);
 		}
-		
 		try {
 			JSONObject element;
 			element = (JSONObject) mArray.get(position);
 			String uri = element.getString(URI_THUMBNAIL);
-			Log.d(TAG,"Calling displayImage with uri: "+uri);
-		    mImageLoader.displayImage(uri, imageView, options);
+			if(mImageLoader.getMemoryCache().get(uri) != null){
+				Log.d(TAG, "Getting image from cache");
+				imageView.setImageBitmap(mImageLoader.getMemoryCache().get(uri));
+			}else{
+				mImageLoader.displayImage(uri, imageView, options);
+				Log.d(TAG,"Getting image from network. Mem cache has size: "+mImageLoader.getMemoryCache().keys().size());
+			}
 		} catch (JSONException e) {
 			Log.e(TAG,"JSONException at calling the get method on an JSONArray. Msg: "+e.getMessage());
 		}
