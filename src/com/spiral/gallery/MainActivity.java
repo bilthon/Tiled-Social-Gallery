@@ -17,9 +17,6 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.origamilabs.library.views.StaggeredGridView;
-import com.origamilabs.library.views.StaggeredGridView.OnItemClickListener;
-import com.spiral.gallery.R;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,11 +27,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnDragListener;
 
-public class MainActivity extends Activity implements Request.Callback, OnDragListener, OnItemClickListener {
+public class MainActivity extends Activity implements Request.Callback {
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
-	private StaggeredGridView mGrid;
-    private ArrayList<String> mData;
 	
 	/**
 	 * Callback called whenever there is a session change
@@ -161,17 +156,5 @@ public class MainActivity extends Activity implements Request.Callback, OnDragLi
 //				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
 //			}
 		StaggeredAdapter adapter = new StaggeredAdapter(array);
-	}
-
-	@Override
-	public boolean onDrag(View v, DragEvent event) {
-		Log.d(TAG,"onDrag");
-		return false;
-	}
-
-	@Override
-	public void onItemClick(StaggeredGridView parent, View view, int position,
-			long id) {
-		Log.d(TAG,"onItemClick");
 	}
 }
