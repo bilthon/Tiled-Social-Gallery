@@ -5,12 +5,13 @@ import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.StaggeredGridView;
 import android.widget.AbsListView;
 
 public abstract class AbsGridActivity extends AbsDynamicLoaderActivity {
 	protected static final String STATE_PAUSE_ON_SCROLL = "STATE_PAUSE_ON_SCROLL";
 	protected static final String STATE_PAUSE_ON_FLING = "STATE_PAUSE_ON_FLING";
-	protected AbsListView listView;
+	protected StaggeredGridView listView;
 
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
@@ -26,13 +27,13 @@ public abstract class AbsGridActivity extends AbsDynamicLoaderActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		applyScrollListener();
+//		applyScrollListener();
 	}
 
-	private void applyScrollListener() {
-		listView.setOnScrollListener(new PauseOnScrollListener(imageLoader,
-				pauseOnScroll, pauseOnFling));
-	}
+//	private void applyScrollListener() {
+//		listView.setOnScrollListener(new PauseOnScrollListener(imageLoader,
+//				pauseOnScroll, pauseOnFling));
+//	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

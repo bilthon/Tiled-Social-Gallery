@@ -1,5 +1,7 @@
 package com.spiral.gallery;
 
+import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,12 +11,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.widget.StaggeredGridView.LayoutParams;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 /**
  * This adapter will provide the views the GridView needs.
@@ -50,6 +54,18 @@ public class AlbumAdapter extends BaseAdapter {
 	/* Customized options for the image loading procedure */
 	private DisplayImageOptions options;
 	
+	/*
+	 * This hashmap will hold a table that will be build to specifically select
+	 * entries that should be expanded into 3 columns.
+	 * 
+	 * This translates to entries at indexes 9, 19, 29, 39, 49..
+	 * 
+	 * Assuming a maximum of 10000 photos, we'll fill this table once and then just
+	 * consult it to know whether to expand or not a child view.
+	 */
+	private HashMap<Integer,Boolean> checkTable;
+	private final int MAX_PHOTOS = 10000;
+	
 	public AlbumAdapter(Context context, ImageLoader l){
 		mContext = context;
 		mImageLoader = l;
@@ -78,6 +94,14 @@ public class AlbumAdapter extends BaseAdapter {
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
+		
+		checkTable = new HashMap<Integer, Boolean>();
+		long before = System.currentTimeMillis();
+		for(int i = 0; i < MAX_PHOTOS; i++)
+			if((i + 1) % 10 == 0)
+				checkTable.put(i, true);
+		long after = System.currentTimeMillis();
+		Log.d(TAG,"Filling the table took me: "+(after-before)+" ms");
 	}
 
 	@Override
@@ -117,10 +141,24 @@ public class AlbumAdapter extends BaseAdapter {
 			imageView = (ImageView) convertView;
 			imageView.setImageResource(R.drawable.ic_empty);
 		}
+		
+		final LayoutParams lp;
+        lp = new LayoutParams(imageView.getLayoutParams());
+		if(checkTable.get(Integer.valueOf(position)) != null){
+			Log.d(TAG,"Extening view at position "+position);
+            lp.span = 3;
+            lp.height = 480;
+		}else{
+			lp.span = 1;
+			lp.height = 280;
+		}
+        imageView.setLayoutParams(lp);
+        imageView.setScaleType(ScaleType.CENTER_CROP);
+		
 		try {
 			JSONObject element;
 			element = (JSONObject) mArray.get(position);
-			String uri = element.getString(URI_THUMBNAIL);
+			String uri = element.getString(URI_BIG);
 			mImageLoader.displayImage(uri, imageView, options);
 		} catch (JSONException e) {
 			Log.e(TAG,"JSONException at calling the get method on an JSONArray. Msg: "+e.getMessage());
