@@ -8,4 +8,7 @@
 	
 	<!-- Content descriptions -->
     <string name="descr_image">Image</string>
+    
+    <!-- Download dialog -->
+    <string name="download_dialog_title">Downloading</string>
 </resources>
