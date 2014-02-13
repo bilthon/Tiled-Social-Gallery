@@ -16,14 +16,17 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.GridView;
 
-public class MainActivity extends Activity implements Request.Callback {
+public class MainActivity extends LoaderActivity implements Request.Callback {
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
 	
@@ -47,6 +50,8 @@ public class MainActivity extends Activity implements Request.Callback {
 	    
 	    LoginButton authButton = (LoginButton) findViewById(R.id.fb_btn);
 	    authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
+
+		listView = (GridView) findViewById(R.id.gridview);
 	}
 	
 	@Override
@@ -145,11 +150,12 @@ public class MainActivity extends Activity implements Request.Callback {
 	public void onCompleted(Response response) {
 		GraphObject graphObject = response.getGraphObject();
 		JSONArray array = (JSONArray) graphObject.getProperty("data");
-//		for(int i = 0; i < array.length(); i++)
-//			try {
-////				Log.d(TAG,"element at "+i+": "+array.get(i));
-//			} catch (JSONException e) {
-//				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
-//			}
+		for(int i = 0; i < array.length(); i++)
+			try {
+				Log.d(TAG,"element at "+i+": "+array.get(i));
+			} catch (JSONException e) {
+				Log.e(TAG,"JSONException! Msg: "+e.getMessage());
+			}
+		this.listView.setAdapter(new AlbumAdapter(this, imageLoader, array));
 	}
 }
