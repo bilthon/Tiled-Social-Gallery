@@ -24,9 +24,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class MainActivity extends LoaderActivity implements Request.Callback {
+public class MainActivity extends AbsGridActivity implements Request.Callback, OnItemClickListener {
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
 	
@@ -52,8 +55,23 @@ public class MainActivity extends LoaderActivity implements Request.Callback {
 	    authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
 		listView = (GridView) findViewById(R.id.gridview);
+		listView.setOnItemClickListener(this);
 	}
 	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		JSONObject element = (JSONObject) parent.getAdapter().getItem(position);
+		Intent intent = new Intent(this, DetailActivity.class);
+		String uri;
+		try {
+			uri = element.getString(AlbumAdapter.URI_BIG);
+			intent.putExtra(AlbumAdapter.URI_BIG, uri);
+			startActivity(intent);
+		} catch (JSONException e) {
+			Log.e(TAG,"JSONException. Msg: "+e.getMessage());
+		}
+	}
+
 	@Override
 	public void onResume() {
 	    super.onResume();

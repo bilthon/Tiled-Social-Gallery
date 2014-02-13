@@ -7,21 +7,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.AbsListView;
 
-public abstract class LoaderActivity extends Activity {
+public abstract class AbsGridActivity extends AbsDynamicLoaderActivity {
 	protected static final String STATE_PAUSE_ON_SCROLL = "STATE_PAUSE_ON_SCROLL";
 	protected static final String STATE_PAUSE_ON_FLING = "STATE_PAUSE_ON_FLING";
-
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
-
 	protected AbsListView listView;
-	
+
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		pauseOnScroll = savedInstanceState.getBoolean(STATE_PAUSE_ON_SCROLL, false);
-		pauseOnFling = savedInstanceState.getBoolean(STATE_PAUSE_ON_FLING, true);
+		pauseOnScroll = savedInstanceState.getBoolean(STATE_PAUSE_ON_SCROLL,
+				false);
+		pauseOnFling = savedInstanceState
+				.getBoolean(STATE_PAUSE_ON_FLING, true);
 	}
 
 	@Override
@@ -31,7 +30,8 @@ public abstract class LoaderActivity extends Activity {
 	}
 
 	private void applyScrollListener() {
-		listView.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
+		listView.setOnScrollListener(new PauseOnScrollListener(imageLoader,
+				pauseOnScroll, pauseOnFling));
 	}
 
 	@Override
