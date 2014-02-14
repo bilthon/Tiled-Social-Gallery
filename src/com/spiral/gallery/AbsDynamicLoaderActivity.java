@@ -6,7 +6,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.ImageView;
 
 public class AbsDynamicLoaderActivity extends Activity {
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
