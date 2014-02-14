@@ -242,6 +242,10 @@ public class StaggeredGridView extends ViewGroup
     }
 
     private final SparseArrayCompat<LayoutRecord> mLayoutRecords = new SparseArrayCompat<LayoutRecord>();
+    
+    /* Will keep a record of the last touch down event */
+	private long mTouchDownTime;
+	private long MINIMUM_TOUCH_INTERVAL = 200;
 
     public StaggeredGridView(Context context)
     {
@@ -423,6 +427,7 @@ public class StaggeredGridView extends ViewGroup
                 mLastTouchY = ev.getY();
                 mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
                 mTouchRemainderY = 0;
+                mTouchDownTime = System.currentTimeMillis();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -476,14 +481,17 @@ public class StaggeredGridView extends ViewGroup
                 }
                 else
                 {
-                	int childCount = this.getChildCount();
-                	Rect r = new Rect();
-                	View child;
-                	for(int i = 0; i < childCount; i++){
-                		child = this.getChildAt(i);
-                		child.getHitRect(r);
-                		if(r.contains((int)ev.getX(), (int)ev.getY()))
-                			this.mOnItemClickListener.onItemClick(this, child, (mFirstPosition+i));
+                	long diff = System.currentTimeMillis() - mTouchDownTime;
+                	if(diff < MINIMUM_TOUCH_INTERVAL ){
+                    	int childCount = this.getChildCount();
+                    	Rect r = new Rect();
+                    	View child;
+                    	for(int i = 0; i < childCount; i++){
+                    		child = this.getChildAt(i);
+                    		child.getHitRect(r);
+                    		if(r.contains((int)ev.getX(), (int)ev.getY()))
+                    			this.mOnItemClickListener.onItemClick(this, child, (mFirstPosition+i));
+                    	}                		
                 	}
                     setTouchMode(TOUCH_MODE_IDLE);
                 }
