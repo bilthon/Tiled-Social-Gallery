@@ -1,6 +1,5 @@
 package com.spiral.gallery;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.json.JSONArray;
@@ -16,18 +15,15 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
+import android.view.ViewGroup;
+import android.support.v4.widget.StaggeredGridView;
+import android.support.v4.widget.StaggeredGridView.OnItemClickListener;
 
 public class MainActivity extends AbsGridActivity implements Request.Callback, OnItemClickListener {
 	private static final String TAG = "MainFragment";
@@ -54,13 +50,16 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 	    LoginButton authButton = (LoginButton) findViewById(R.id.fb_btn);
 	    authButton.setReadPermissions(Arrays.asList("user_likes", "user_status"));
 
-		listView = (GridView) findViewById(R.id.gridview);
-		listView.setOnItemClickListener(this);
+		listView = (StaggeredGridView) findViewById(R.id.grid);
+		listView.setColumnCount(3);
+		listView.setOnItemClickListener(this);		
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		JSONObject element = (JSONObject) parent.getAdapter().getItem(position);
+	public void onItemClick(ViewGroup parent, View view, int position) {
+		Log.d(TAG,"onItemClick. position: "+position);
+		StaggeredGridView gridView = (StaggeredGridView) parent;
+		JSONObject element = (JSONObject) gridView.getAdapter().getItem(position);
 		Intent intent = new Intent(this, DetailActivity.class);
 		String uri;
 		try {
