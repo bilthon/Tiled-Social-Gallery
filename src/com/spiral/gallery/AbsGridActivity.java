@@ -1,7 +1,6 @@
 package com.spiral.gallery;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 import android.app.Activity;
 import android.os.Bundle;
