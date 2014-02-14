@@ -25,6 +25,16 @@ import android.view.ViewGroup;
 import android.support.v4.widget.StaggeredGridView;
 import android.support.v4.widget.StaggeredGridView.OnItemClickListener;
 
+/**
+ * MainActivity that will intially just display a login button at the base of the screen.
+ * <p>
+ * After the user has logged in and given the app permissions, a gallery will be populated
+ * with all of the user's facebook photos.
+ * <p>
+ * @author Nelson R. Pérez
+ * @version 1.0.0
+ *
+ */
 public class MainActivity extends AbsGridActivity implements Request.Callback, OnItemClickListener {
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;

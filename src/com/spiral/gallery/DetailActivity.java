@@ -10,6 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * Detail activity that will feature a larger visualization screen of a single picture selected 
+ * from the gallery
+ * <p>
+ * @author Nelson R. Pérez
+ * @version 1.0.0
+ */
 public class DetailActivity extends AbsDynamicLoaderActivity {
 	private String TAG = "DetailActivity";
 	private ProgressDialog mProgress;
