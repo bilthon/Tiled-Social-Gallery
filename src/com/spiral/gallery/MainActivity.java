@@ -100,7 +100,10 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-		
+	
+	/**
+	 * Called on every session state change.
+	 */
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {
 	        Log.i(TAG, "Logged in...");
@@ -110,6 +113,7 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 	        	requestPhotoPermissions();
 	    } else if (state.isClosed()) {
 	        Log.i(TAG, "Logged out...");
+	        this.listView.setAdapter(null);
 	    }
 	}
 	
