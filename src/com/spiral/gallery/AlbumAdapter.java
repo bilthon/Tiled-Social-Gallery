@@ -41,6 +41,8 @@ public class AlbumAdapter extends BaseAdapter {
 	public static final String URI_THUMBNAIL = "src_small";
 	public static final String URI_BIG = "src_big";
 	public static final String URI_CAPTION = "caption";
+
+	public static String ADAPTER_DATA_KEY = "ADAPTER_DATA_KEY";
 	
 	/* Context needed to get hold of system services */
 	private Context mContext;
@@ -90,6 +92,10 @@ public class AlbumAdapter extends BaseAdapter {
 		mArray = array;
 	}
 	
+	public JSONArray getData(){
+		return mArray;
+	}
+	
 	private void setupAdapter(){
 	    /* Options specify different properties of the dynamic image loading procedure */
 		options = new DisplayImageOptions.Builder()
@@ -112,7 +118,6 @@ public class AlbumAdapter extends BaseAdapter {
 		Log.d(TAG,"Filling the table took me: "+(after-before)+" ms");
 		
 		/* Saving density information in an instance variable for later use */
-		Log.d(TAG,"Density: "+mContext.getResources().getDisplayMetrics().density);
 		mCurrentDensity = mContext.getResources().getDisplayMetrics().density;
 	}
 

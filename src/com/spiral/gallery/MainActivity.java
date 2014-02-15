@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.support.v4.widget.StaggeredGridView;
 import android.support.v4.widget.StaggeredGridView.OnItemClickListener;
 
@@ -80,7 +81,7 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 			Log.e(TAG,"JSONException. Msg: "+e.getMessage());
 		}
 	}
-
+	
 	@Override
 	public void onResume() {
 	    super.onResume();
@@ -103,8 +104,34 @@ public class MainActivity extends AbsGridActivity implements Request.Callback, O
 	public void onSaveInstanceState(Bundle outState) {
 	    super.onSaveInstanceState(outState);
 	    uiHelper.onSaveInstanceState(outState);
+	    
+	    /* If we have data in the adapter, lets save it */
+	    AlbumAdapter adapter = (AlbumAdapter) this.listView.getAdapter();
+	    if(adapter != null){
+	    	JSONArray data = adapter.getData();
+	    	outState.putString(AlbumAdapter.ADAPTER_DATA_KEY, data.toString());
+	    }
 	}
 
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		String data = savedInstanceState.getString(AlbumAdapter.ADAPTER_DATA_KEY);
+		if(data != null){
+			AlbumAdapter adapter = new AlbumAdapter(this, imageLoader);
+			JSONArray array;
+			try {
+				array = new JSONArray(data);
+				adapter.setData(array);
+				this.listView.setAdapter(adapter);
+			} catch (JSONException e) {
+				Log.e(TAG,"JSONException. Msg: "+e.getMessage());
+			}
+		}else{
+			Log.w(TAG,"Data is null");
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
